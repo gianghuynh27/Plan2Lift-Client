@@ -1,18 +1,45 @@
 import { useState, type FormEvent } from "react";
 import AuthLayout from "../components/AuthLayout";
+import { useAuth } from "../auth/use-auth";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
 
     if (!email.trim() || !password) {
-      setError("Please enter your email and password.");
+      setError("Please enter both email and password.");
       return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      await login(email.trim(), password);
+
+      const destination =
+        (
+          location.state as {
+            from?: string;
+          } | null
+        )?.from ?? "/";
+
+      navigate(destination, {
+        replace: true,
+      });
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Unable to sign in.");
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -78,9 +105,10 @@ function LoginPage() {
 
         <button
           type="submit"
+          disabled={isSubmitting}
           className="w-full rounded-xl bg-emerald-700 px-4 py-3 font-semibold text-white shadow-sm transition hover:bg-emerald-800 focus:outline-none focus:ring-4 focus:ring-emerald-700/20 active:translate-y-px"
         >
-          Sign in
+          {isSubmitting ? "Signing in..." : "Sign in"}
         </button>
       </form>
     </AuthLayout>

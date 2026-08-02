@@ -1,5 +1,7 @@
 import { useState, type FormEvent } from "react";
 import AuthLayout from "../components/AuthLayout";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../auth/use-auth";
 
 interface SignupForm {
   username: string;
@@ -18,6 +20,9 @@ const initialForm: SignupForm = {
 function SignupPage() {
   const [form, setForm] = useState<SignupForm>(initialForm);
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { register } = useAuth();
+  const navigate = useNavigate();
 
   function updateField(field: keyof SignupForm, value: string) {
     setForm((currentForm) => ({
@@ -26,28 +31,29 @@ function SignupPage() {
     }));
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
-
-    if (
-      !form.username.trim() ||
-      !form.email.trim() ||
-      !form.password ||
-      !form.confirmPassword
-    ) {
-      setError("Please complete every field.");
-      return;
-    }
-
-    if (form.password.length < 8) {
-      setError("Password must contain at least 8 characters.");
-      return;
-    }
 
     if (form.password !== form.confirmPassword) {
       setError("Passwords do not match.");
       return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      await register(form.username.trim(), form.email.trim(), form.password);
+
+      navigate("/", { replace: true });
+    } catch (error) {
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Unable to create your account.",
+      );
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -152,9 +158,10 @@ function SignupPage() {
 
         <button
           type="submit"
+          disabled={isSubmitting}
           className="w-full rounded-xl bg-emerald-700 px-4 py-3 font-semibold text-white shadow-sm transition hover:bg-emerald-800 focus:outline-none focus:ring-4 focus:ring-emerald-700/20 active:translate-y-px"
         >
-          Create account
+          {isSubmitting ? "Creating account..." : "Create account"}
         </button>
       </form>
     </AuthLayout>
