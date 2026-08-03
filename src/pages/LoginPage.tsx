@@ -38,6 +38,7 @@ function LoginPage() {
         replace: true,
       });
     } catch (error) {
+      console.log("ERROR =", error);
       setError(error instanceof Error ? error.message : "Unable to sign in.");
     } finally {
       setIsSubmitting(false);
@@ -50,7 +51,7 @@ function LoginPage() {
       description="Sign in to continue tracking your workouts and progress."
       footerText="Don't have an account?"
       footerLinkText="Create one"
-      footerLinkTo="/signup"
+      footerLinkTo="/auth/signup"
     >
       <form onSubmit={handleSubmit} className="space-y-5">
         {error && (

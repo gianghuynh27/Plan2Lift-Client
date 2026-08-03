@@ -1,0 +1,49 @@
+import baseApi from "../Api";
+
+import type { Payloads, Responses } from "./Types";
+
+export const registerUser = async (
+  payload: Payloads["registerUser"],
+): Promise<Responses["registerUser"] | null> => {
+  try {
+    const response = await baseApi.post("/v1/auth/register", payload);
+    if (response.status !== 201) {
+      throw new Error(response.statusText);
+    }
+    return response.data as Responses["registerUser"];
+  } catch (error) {
+    console.error("Error registering user:", error);
+    return null;
+  }
+};
+
+// : Promise<
+//   Responses["getCurrentUser"] | null
+// >
+export const getCurrentUser = async () => {
+  try {
+    const response = await baseApi.get("/v1/users/me");
+    if (response.status !== 200) {
+      throw new Error(response.statusText);
+    }
+    return response.data.data as Responses["getCurrentUser"];
+  } catch (error) {
+    console.error("Error fetching current user:", error);
+    return null;
+  }
+};
+
+export const loginUser = async (
+  payload: Payloads["loginUser"],
+): Promise<Responses["loginUser"] | null> => {
+  try {
+    const response = await baseApi.post("/v1/auth/login", payload);
+    if (response.status !== 200) {
+      throw new Error(response.statusText);
+    }
+    return response.data as Responses["loginUser"];
+  } catch (error) {
+    console.error("Error logging in user:", error);
+    return null;
+  }
+};

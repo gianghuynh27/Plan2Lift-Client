@@ -1,10 +1,21 @@
 import { useNavigate } from "react-router-dom";
 
 import { useAuthContext } from "../contexts";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
 
 function HomePage() {
   const { user, logout } = useAuthContext();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log("user =", user);
+    if (!user?.verified) {
+      toast("Please verify your email address to access the application.", {
+        type: "error",
+      });
+    }
+  });
 
   function handleLogout() {
     logout();

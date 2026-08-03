@@ -4,6 +4,7 @@ export type AuthUser = {
   email: string;
   createdAt: string;
   updatedAt: string;
+  verified?: boolean;
 };
 
 type TokenResponse = {
@@ -52,14 +53,11 @@ export async function registerUser(input: {
   return readResponse<TokenResponse>(response);
 }
 
-export async function loginUser(input: {
-  email: string;
-  password: string;
-}) {
-  const response = await fetch('/api/v1/auth/login', {
-    method: 'POST',
+export async function loginUser(input: { email: string; password: string }) {
+  const response = await fetch("/api/v1/auth/login", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(input),
   });
@@ -68,7 +66,7 @@ export async function loginUser(input: {
 }
 
 export async function getCurrentUser(accessToken: string) {
-  const response = await fetch('/api/v1/users/me', {
+  const response = await fetch("/api/v1/users/me", {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },

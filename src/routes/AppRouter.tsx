@@ -34,7 +34,12 @@ export default function AppRouter() {
       <Route element={<ProtectedRoute />}>
         <Route path="/" element={<HomePage />} />
       </Route>
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route
+        path="*"
+        element={
+          <Navigate to={isAuthenticated ? "/" : "/auth/login"} replace />
+        }
+      />
     </Routes>
   );
 }
