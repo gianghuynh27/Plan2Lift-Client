@@ -1,14 +1,15 @@
 import { useState, type FormEvent } from "react";
-import AuthLayout from "../components/AuthLayout";
-import { useAuth } from "../auth/use-auth";
 import { useLocation, useNavigate } from "react-router-dom";
+
+import AuthLayout from "../components/AuthLayout";
+import { useAuthContext } from "../contexts";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { login } = useAuth();
+  const { login } = useAuthContext();
   const navigate = useNavigate();
   const location = useLocation();
 

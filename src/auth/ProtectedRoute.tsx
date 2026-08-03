@@ -1,25 +1,16 @@
-import {
-  Navigate,
-  Outlet,
-  useLocation,
-} from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 
-import { useAuth } from "./use-auth";
+import { useAuthContext } from "../contexts";
 
 export function ProtectedRoute() {
-  const {
-    isAuthenticated,
-    isInitializing,
-  } = useAuth();
+  const { isAuthenticated, isInitializing } = useAuthContext();
 
   const location = useLocation();
 
   if (isInitializing) {
     return (
       <main className="grid min-h-screen place-items-center bg-slate-50">
-        <p className="text-slate-600">
-          Loading your account...
-        </p>
+        <p className="text-slate-600">Loading your account...</p>
       </main>
     );
   }

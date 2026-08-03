@@ -1,11 +1,12 @@
 import { useEffect, useState, type ReactNode } from "react";
+
 import {
   getCurrentUser,
   loginUser,
   registerUser,
   type AuthUser,
-} from "../api/auth.api";
-import { AuthContext } from "./auth-context";
+} from "../../api/auth.api";
+import AuthContext from "./AuthContext";
 
 const ACCESS_TOKEN_KEY = "accessToken";
 
@@ -13,7 +14,7 @@ type AuthProviderProps = {
   children: ReactNode;
 };
 
-export function AuthProvider({ children }: AuthProviderProps) {
+export default function AuthProvider({ children }: AuthProviderProps) {
   const [initialToken] = useState(() =>
     sessionStorage.getItem(ACCESS_TOKEN_KEY),
   );
@@ -25,6 +26,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [isInitializing, setIsInitializing] = useState(Boolean(initialToken));
 
   useEffect(() => {
+    console.log(
+      "AuthProvider useEffect called with initialToken:",
+      initialToken,
+    );
     if (!initialToken) {
       return;
     }

@@ -1,6 +1,5 @@
 import { createContext } from "react";
-
-import type { AuthUser } from "../api/auth.api";
+import type { AuthUser } from "../../api/auth.api";
 
 export type AuthContextValue = {
   user: AuthUser | null;
@@ -18,6 +17,6 @@ export type AuthContextValue = {
   logout: () => Promise<void>;
 };
 
-export const AuthContext = createContext<AuthContextValue | undefined>(
-  undefined,
-);
+const AuthContext = createContext<AuthContextValue | undefined>(undefined);
+
+export default AuthContext;

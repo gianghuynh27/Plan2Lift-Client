@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
 import AuthLayout from "../components/AuthLayout";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../auth/use-auth";
+import { useAuthContext } from "../contexts";
 
 interface SignupForm {
   username: string;
@@ -21,7 +21,7 @@ function SignupPage() {
   const [form, setForm] = useState<SignupForm>(initialForm);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { register } = useAuth();
+  const { register } = useAuthContext();
   const navigate = useNavigate();
 
   function updateField(field: keyof SignupForm, value: string) {

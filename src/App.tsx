@@ -1,20 +1,20 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+// import { Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 
-import LoginPage from "./pages/LoginPage";
-import SignupPage from "./pages/SignupPage";
-import { ProtectedRoute } from "./auth/ProtectedRoute";
-import HomePage from "./pages/HomePage";
+// import LoginPage from "./pages/LoginPage";
+// import SignupPage from "./pages/SignupPage";
+// import { ProtectedRoute } from "./auth/ProtectedRoute";
+// import HomePage from "./pages/HomePage";
+import AppRouter from "./routes/AppRouter";
+import AuthProvider from "./contexts/auth/AuthProvider";
 
 function App() {
   return (
-    <Routes>
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/signup" element={<SignupPage />} />
-      <Route element={<ProtectedRoute />}>
-        <Route path="/" element={<HomePage />} />
-      </Route>
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+    <BrowserRouter>
+      <AuthProvider>
+        <AppRouter />
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 

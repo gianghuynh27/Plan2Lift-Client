@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 
-import { useAuth } from "../auth/use-auth";
+import { useAuthContext } from "../contexts";
 
 function HomePage() {
-  const { user, logout } = useAuth();
+  const { user, logout } = useAuthContext();
   const navigate = useNavigate();
 
   function handleLogout() {
