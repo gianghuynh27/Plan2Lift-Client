@@ -47,3 +47,31 @@ export const loginUser = async (
     return null;
   }
 };
+
+type DuplicateCheckType = "email" | "username";
+
+export const isDuplicate = async (
+  type: DuplicateCheckType,
+  value: string,
+): Promise<Responses["isDuplicate"] | null | { isDuplicate: boolean }> => {
+  try {
+    const response = await baseApi.get(
+      `/v1/auth/duplicate/${type}?value=${value}`,
+    );
+    if (response.status !== 200) {
+      throw new Error(response.statusText);
+    }
+
+    return response.data as Responses["isDuplicate"];
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(`Error checking duplicate ${type}:`, error.message);
+      if (error.message.includes("409")) {
+        return { isDuplicate: true };
+      }
+    }
+
+    console.error(`Error checking duplicate ${type}:`, error);
+    return null;
+  }
+};

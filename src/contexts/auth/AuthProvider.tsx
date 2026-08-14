@@ -79,7 +79,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
       return;
     }
 
-    await establishSession(response.tokens.accessToken);
+    //await establishSession(response.tokens.accessToken);
   }
 
   async function logout() {

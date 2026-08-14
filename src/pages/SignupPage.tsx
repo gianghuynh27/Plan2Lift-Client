@@ -1,7 +1,14 @@
-import { useState, type FormEvent } from "react";
+import { useState, type FormEvent, useEffect } from "react";
 import AuthLayout from "../components/AuthLayout";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../contexts";
+
+import { authService } from "../services/auth";
+import { useDebounce } from "../hooks";
+
+/**
+ * 1. would like to implemnt react-hook-form with zod
+ */
 
 interface SignupForm {
   username: string;
@@ -24,7 +31,54 @@ function SignupPage() {
   const { register } = useAuthContext();
   const navigate = useNavigate();
 
-  function updateField(field: keyof SignupForm, value: string) {
+  const [emailOk, setEmailOk] = useState(false);
+  const [usernameOk, setUsernameOk] = useState(false);
+
+  const debouncedUsername = useDebounce(form.username, 500);
+  const debouncedEmail = useDebounce(form.email, 500);
+
+  useEffect(() => {
+    const checkDuplicate = async (checkType: "username" | "email") => {
+      if (checkType === "username") {
+        const res = await authService.isDuplicate(
+          "username",
+          debouncedUsername,
+        );
+        if (res && res.isDuplicate) {
+          setError("Username is already taken.");
+          setUsernameOk(false);
+        } else {
+          setError("");
+          setUsernameOk(true);
+        }
+      } else if (checkType === "email") {
+        const res = await authService.isDuplicate("email", debouncedEmail);
+        if (res && res.isDuplicate) {
+          setError("Email is already registered.");
+          setEmailOk(false);
+        } else {
+          setError("");
+          setEmailOk(true);
+        }
+      }
+    };
+
+    if (debouncedUsername) {
+      checkDuplicate("username");
+    }
+
+    if (debouncedEmail) {
+      checkDuplicate("email");
+    }
+  }, [debouncedUsername, debouncedEmail]);
+
+  async function updateField(field: keyof SignupForm, value: string) {
+    // if (field === 'username' || field === "email") {
+    //   // check duplicate
+    //   const res = await authService.isDuplicate(field, value)
+    //   console.log(res)
+    // }
+
     setForm((currentForm) => ({
       ...currentForm,
       [field]: value,
@@ -96,23 +150,25 @@ function SignupPage() {
             className={inputClasses}
           />
         </div>
+        {usernameOk && (
+          <div>
+            <label htmlFor="signup-email" className={labelClasses}>
+              Email
+            </label>
 
-        <div>
-          <label htmlFor="signup-email" className={labelClasses}>
-            Email
-          </label>
-
-          <input
-            required
-            id="signup-email"
-            type="email"
-            value={form.email}
-            onChange={(event) => updateField("email", event.target.value)}
-            placeholder="you@example.com"
-            autoComplete="email"
-            className={inputClasses}
-          />
-        </div>
+            <input
+              required
+              id="signup-email"
+              type="email"
+              value={form.email}
+              onChange={(event) => updateField("email", event.target.value)}
+              placeholder="you@example.com"
+              autoComplete="email"
+              className={inputClasses}
+              
+            />
+          </div>
+        )}
 
         <div>
           <label htmlFor="signup-password" className={labelClasses}>

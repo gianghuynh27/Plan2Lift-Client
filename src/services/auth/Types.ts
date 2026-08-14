@@ -30,4 +30,8 @@ export type Responses = {
     updatedAt: string;
   };
   loginUser: AuthResponse;
+  isDuplicate: {
+    isDuplicate: boolean;
+    message: string
+  }
 };
