@@ -1,5 +1,6 @@
 import { createContext } from "react";
 import type { AuthUser } from "../../api/auth.api";
+import type { Responses } from "../../services/auth/Types";
 
 export type AuthContextValue = {
   user: AuthUser | null;
@@ -12,7 +13,7 @@ export type AuthContextValue = {
     username: string,
     email: string,
     password: string,
-  ) => Promise<void>;
+  ) => Promise<Responses["registerUser"]>;
 
   logout: () => Promise<void>;
 };

@@ -1,8 +1,8 @@
 import { useState, type FormEvent } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import AuthLayout from "../components/AuthLayout";
-import { useAuthContext } from "../contexts";
+import AuthLayout from "../../components/AuthLayout";
+import { useAuthContext } from "../../contexts";
 
 function LoginPage() {
   const [email, setEmail] = useState("");

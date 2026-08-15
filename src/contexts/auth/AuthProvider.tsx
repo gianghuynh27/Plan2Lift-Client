@@ -74,11 +74,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
       password,
     });
 
-    if (!response) {
-      console.error("Registration failed");
-      return;
-    }
-
+    return response;
     //await establishSession(response.tokens.accessToken);
   }
 

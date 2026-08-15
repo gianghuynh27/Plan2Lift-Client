@@ -1,10 +1,10 @@
 import { useState, type FormEvent, useEffect } from "react";
-import AuthLayout from "../components/AuthLayout";
+import AuthLayout from "../../components/AuthLayout";
 import { useNavigate } from "react-router-dom";
-import { useAuthContext } from "../contexts";
+import { useAuthContext } from "../../contexts";
 
-import { authService } from "../services/auth";
-import { useDebounce } from "../hooks";
+import { authService } from "../../services/auth";
+import { useDebounce } from "../../hooks";
 
 /**
  * 1. would like to implemnt react-hook-form with zod
@@ -97,9 +97,16 @@ function SignupPage() {
     setIsSubmitting(true);
 
     try {
-      await register(form.username.trim(), form.email.trim(), form.password);
+      const response = await register(form.username.trim(), form.email.trim(), form.password);
+      const normalizedEmail = form.email.trim().toLowerCase();
 
-      navigate("/", { replace: true });
+      navigate("/auth/check-email", {
+        replace: true,
+        state: {
+          email: normalizedEmail,
+          emailSent: response.emailSent,
+        },
+      });
     } catch (error) {
       setError(
         error instanceof Error
@@ -165,7 +172,6 @@ function SignupPage() {
               placeholder="you@example.com"
               autoComplete="email"
               className={inputClasses}
-              
             />
           </div>
         )}

@@ -10,9 +10,17 @@ export type Payloads = {
     email: string;
     password: string;
   };
+  resendVerificationEmail: {
+    email: string;
+  };
 };
 
-type AuthResponse = {
+type RegisterResponse = {
+  message: string;
+  emailSent: boolean;
+};
+
+type LoginResponse = {
   message: string;
   tokens: {
     accessToken: string;
@@ -21,17 +29,21 @@ type AuthResponse = {
 };
 
 export type Responses = {
-  registerUser: AuthResponse;
+  registerUser: RegisterResponse;
   getCurrentUser: {
     _id: string;
     username: string;
     email: string;
+    isVerified: boolean;
     createdAt: string;
     updatedAt: string;
   };
-  loginUser: AuthResponse;
+  loginUser: LoginResponse;
   isDuplicate: {
     isDuplicate: boolean;
     message: string
   }
+  resendVerificationEmail: {
+    message: string;
+  };
 };

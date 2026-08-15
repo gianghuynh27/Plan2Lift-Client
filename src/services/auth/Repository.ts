@@ -4,7 +4,7 @@ import type { Payloads, Responses } from "./Types";
 
 export const registerUser = async (
   payload: Payloads["registerUser"],
-): Promise<Responses["registerUser"] | null> => {
+): Promise<Responses["registerUser"]> => {
   try {
     const response = await baseApi.post("/v1/auth/register", payload);
     if (response.status !== 201) {
@@ -13,7 +13,7 @@ export const registerUser = async (
     return response.data as Responses["registerUser"];
   } catch (error) {
     console.error("Error registering user:", error);
-    return null;
+    throw error;
   }
 };
 
@@ -75,3 +75,14 @@ export const isDuplicate = async (
     return null;
   }
 };
+
+export async function resendVerificationEmail(
+  payload: Payloads["resendVerificationEmail"],
+): Promise<Responses["resendVerificationEmail"]> {
+  const response = await baseApi.post(
+    "/v1/auth/resend-verification",
+    payload,
+  );
+
+  return response.data as Responses["resendVerificationEmail"];
+}
