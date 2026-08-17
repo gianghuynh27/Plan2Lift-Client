@@ -41,9 +41,12 @@ export type Responses = {
   loginUser: LoginResponse;
   isDuplicate: {
     isDuplicate: boolean;
-    message: string
-  }
+    message: string;
+  };
   resendVerificationEmail: {
+    message: string;
+  };
+  verifyEmail: {
     message: string;
   };
 };

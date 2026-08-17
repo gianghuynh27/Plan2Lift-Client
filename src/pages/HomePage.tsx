@@ -10,7 +10,7 @@ function HomePage() {
 
   useEffect(() => {
     console.log("user =", user);
-    if (!user?.verified) {
+    if (!user?.isVerified) {
       toast("Please verify your email address to access the application.", {
         type: "error",
       });

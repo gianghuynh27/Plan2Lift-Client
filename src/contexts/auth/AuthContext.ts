@@ -1,9 +1,8 @@
 import { createContext } from "react";
-import type { AuthUser } from "../../api/auth.api";
 import type { Responses } from "../../services/auth/Types";
 
 export type AuthContextValue = {
-  user: AuthUser | null;
+  user: Responses["getCurrentUser"] | null;
   isAuthenticated: boolean;
   isInitializing: boolean;
 

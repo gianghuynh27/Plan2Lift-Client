@@ -76,13 +76,22 @@ export const isDuplicate = async (
   }
 };
 
-export async function resendVerificationEmail(
+export const resendVerificationEmail = async(
   payload: Payloads["resendVerificationEmail"],
-): Promise<Responses["resendVerificationEmail"]> {
+): Promise<Responses["resendVerificationEmail"]> => {
   const response = await baseApi.post(
     "/v1/auth/resend-verification",
     payload,
   );
 
   return response.data as Responses["resendVerificationEmail"];
+}
+
+export const verifyEmail = async (
+  token: string,
+): Promise<Responses["verifyEmail"]> => {
+  const response = await baseApi.get(
+    `/v1/auth/verify-email?token=${token}`,
+  );
+  return response.data as Responses["verifyEmail"];
 }

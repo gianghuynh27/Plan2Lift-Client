@@ -63,12 +63,18 @@ function SignupPage() {
       }
     };
 
-    if (debouncedUsername) {
-      checkDuplicate("username");
+    if (!debouncedUsername) {
+      setUsernameOk(false);
+      setError("");
+    } else {
+      void checkDuplicate("username");
     }
 
-    if (debouncedEmail) {
-      checkDuplicate("email");
+    if (!debouncedEmail) {
+      setEmailOk(false);
+      setError("");
+    } else {
+      void checkDuplicate("email");
     }
   }, [debouncedUsername, debouncedEmail]);
 
@@ -78,7 +84,15 @@ function SignupPage() {
     //   const res = await authService.isDuplicate(field, value)
     //   console.log(res)
     // }
+    if (field === "username") {
+      setError("");
+      setUsernameOk(false);
+    }
 
+    if (field === "email") {
+      setError("");
+      setEmailOk(false);
+    }
     setForm((currentForm) => ({
       ...currentForm,
       [field]: value,
@@ -97,7 +111,11 @@ function SignupPage() {
     setIsSubmitting(true);
 
     try {
-      const response = await register(form.username.trim(), form.email.trim(), form.password);
+      const response = await register(
+        form.username.trim(),
+        form.email.trim(),
+        form.password,
+      );
       const normalizedEmail = form.email.trim().toLowerCase();
 
       navigate("/auth/check-email", {
