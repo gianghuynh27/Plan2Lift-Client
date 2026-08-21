@@ -5,7 +5,7 @@ import axios from "axios";
 import AuthLayout from "../../components/AuthLayout";
 import { authService } from "../../services/auth";
 
-type VerificationStatus = "ready" | "verifying" | "success" | "error";
+type VerificationStatus = "verifying" | "success" | "error";
 
 function getErrorMessage(error: unknown): string {
   if (axios.isAxiosError(error)) {
@@ -36,7 +36,7 @@ function VerifyEmailPage() {
   const verificationStarted = useRef(false);
 
   const [status, setStatus] = useState<VerificationStatus>(
-    token ? "ready" : "error",
+    token ? "verifying" : "error",
   );
 
   const [message, setMessage] = useState(
