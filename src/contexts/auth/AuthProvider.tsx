@@ -1,11 +1,5 @@
 import { useState, type ReactNode } from "react";
 
-import {
-  // getCurrentUser,
-  // loginUser,
-  // registerUser,
-  type AuthUser,
-} from "../../api/auth.api";
 
 import { authService } from "../../services/auth";
 import AuthContext from "./AuthContext";
@@ -13,11 +7,13 @@ import AuthContext from "./AuthContext";
 import { SESSION_STORAGE } from "../../constants";
 import { usePersistLogin } from "../../hooks";
 import { toast } from "react-toastify";
+import type { Responses } from "../../services/auth/Types";
 
 type AuthProviderProps = {
   children: ReactNode;
 };
 
+type currentUser = Responses["getCurrentUser"];
 export default function AuthProvider({ children }: AuthProviderProps) {
   const [initialToken] = useState(() =>
     sessionStorage.getItem(SESSION_STORAGE.ACCESS_TOKEN_KEY),
@@ -25,46 +21,40 @@ export default function AuthProvider({ children }: AuthProviderProps) {
 
   const [accessToken, setAccessToken] = useState<string | null>(initialToken);
 
-  const [user, setUser] = useState<AuthUser | null>(null);
+  const [user, setUser] = useState<currentUser | null>(null);
 
   const [isInitializing, setIsInitializing] = useState(Boolean(initialToken));
 
   usePersistLogin(
     initialToken,
-    authService.getCurrentUser as (token: string) => Promise<AuthUser>,
+    authService.getCurrentUser as (token: string) => Promise<currentUser>,
     setUser,
     setAccessToken,
     setIsInitializing,
   );
 
   async function establishSession(token: string) {
-    new Promise<void>((resolve) => {
-      setAccessToken(token);
-      sessionStorage.setItem(SESSION_STORAGE.ACCESS_TOKEN_KEY, token);
-      resolve();
-    }).then(async () => {
-      const response = await authService.getCurrentUser();
-      setUser(response as AuthUser);
-    });
+    sessionStorage.setItem(SESSION_STORAGE.ACCESS_TOKEN_KEY, token);
 
+    setAccessToken(token);
     // await sessionStorage.setItem(SESSION_STORAGE.ACCESS_TOKEN_KEY, token);
+    const response = await authService.getCurrentUser();
 
-    // const response = (await authService.getCurrentUser()) as AuthUser;
-    // setAccessToken(token);
-    // setUser(response);
+    if (!response) {
+      sessionStorage.removeItem(SESSION_STORAGE.ACCESS_TOKEN_KEY);
+
+      setAccessToken(null);
+
+      throw new Error("Unable to load your account after signing in.");
+    }
+
+    setUser(response as currentUser);
   }
 
   async function login(email: string, password: string) {
     const response = await authService.loginUser({ email, password });
-    if (!response) {
-      console.error("Login failed");
-      toast("Login failed. Please check your credentials and try again.", {
-        type: "error",
-      });
-      return;
-    }
 
-    await establishSession(response?.tokens.accessToken);
+    await establishSession(response.tokens.accessToken);
   }
 
   async function register(username: string, email: string, password: string) {

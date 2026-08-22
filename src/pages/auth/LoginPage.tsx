@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import AuthLayout from "../../components/AuthLayout";
 import { useAuthContext } from "../../contexts";
+import axios from "axios";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
@@ -38,7 +39,32 @@ function LoginPage() {
         replace: true,
       });
     } catch (error) {
-      console.log("ERROR =", error);
+      if (axios.isAxiosError(error)) {
+        const responseData = error.response?.data as
+          | {
+              code?: string;
+              message?: string;
+            }
+          | undefined;
+
+        if (responseData?.code === "EMAIL_NOT_VERIFIED") {
+          navigate("/auth/check-email", {
+            replace: true,
+            state: {
+              email: email.trim().toLowerCase(),
+              unverifiedEmailLogin: true,
+            },
+          });
+          return;
+        }
+
+        setError(
+          responseData?.message ?? "Unable to sign in. Please try again.",
+        );
+
+        return;
+      }
+
       setError(error instanceof Error ? error.message : "Unable to sign in.");
     } finally {
       setIsSubmitting(false);

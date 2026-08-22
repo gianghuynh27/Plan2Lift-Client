@@ -35,16 +35,13 @@ export const getCurrentUser = async () => {
 
 export const loginUser = async (
   payload: Payloads["loginUser"],
-): Promise<Responses["loginUser"] | null> => {
+): Promise<Responses["loginUser"]> => {
   try {
     const response = await baseApi.post("/v1/auth/login", payload);
-    if (response.status !== 200) {
-      throw new Error(response.statusText);
-    }
     return response.data as Responses["loginUser"];
   } catch (error) {
     console.error("Error logging in user:", error);
-    return null;
+    throw error;
   }
 };
 
