@@ -24,7 +24,6 @@ type LoginResponse = {
   message: string;
   tokens: {
     accessToken: string;
-    refreshToken: string;
   };
 };
 

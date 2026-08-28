@@ -45,6 +45,15 @@ export const loginUser = async (
   }
 };
 
+export const logoutUser = async (): Promise<void> => {
+  try {
+    await baseApi.post("/v1/auth/logout");
+  } catch (error) {
+    console.error("Backend logout failed:", error);
+    throw error;
+  }
+};
+
 type DuplicateCheckType = "email" | "username";
 
 export const isDuplicate = async (

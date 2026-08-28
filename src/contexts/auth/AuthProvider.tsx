@@ -1,6 +1,5 @@
 import { useState, type ReactNode } from "react";
 
-
 import { authService } from "../../services/auth";
 import AuthContext from "./AuthContext";
 
@@ -69,9 +68,11 @@ export default function AuthProvider({ children }: AuthProviderProps) {
   }
 
   async function logout() {
+    const response = await authService.logoutUser();
     sessionStorage.removeItem(SESSION_STORAGE.ACCESS_TOKEN_KEY);
     setAccessToken(null);
     setUser(null);
+    return response;
   }
 
   return (

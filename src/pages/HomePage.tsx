@@ -19,8 +19,7 @@ function HomePage() {
 
   function handleLogout() {
     logout();
-
-    navigate("/login", {
+    navigate("/auth/login", {
       replace: true,
     });
   }
