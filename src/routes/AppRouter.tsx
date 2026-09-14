@@ -7,6 +7,7 @@ import AuthRouter from "./auth/AuthRouter";
 import HomePage from "../pages/HomePage";
 // components
 import { Spinner } from "../components/misc/loaders";
+import CreateWorkoutPlanPage from "../pages/workoutPlans/CreateWorkoutPlanPage";
 
 export default function AppRouter() {
   const { isInitializing, isAuthenticated, user } = useAuthContext();
@@ -33,6 +34,7 @@ export default function AppRouter() {
       )}
       <Route element={<ProtectedRoute />}>
         <Route path="/" element={<HomePage />} />
+        <Route path="/workout-plans/new" element={<CreateWorkoutPlanPage />} />
       </Route>
       <Route
         path="*"

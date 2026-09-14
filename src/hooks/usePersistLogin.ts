@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { SESSION_STORAGE } from "../constants";
+import type { Responses } from "../services/auth/Types";
 
-import type { AuthUser } from "../api/auth.api";
+type AuthUser = Responses["getCurrentUser"];
 
 export default function usePersistLogin(
   initialToken: string | null,

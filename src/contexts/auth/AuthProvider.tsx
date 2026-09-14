@@ -5,7 +5,6 @@ import AuthContext from "./AuthContext";
 
 import { SESSION_STORAGE } from "../../constants";
 import { usePersistLogin } from "../../hooks";
-import { toast } from "react-toastify";
 import type { Responses } from "../../services/auth/Types";
 
 type AuthProviderProps = {

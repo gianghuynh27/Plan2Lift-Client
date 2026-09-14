@@ -57,10 +57,10 @@ function HomePage() {
 
             <button
               type="button"
-              disabled
-              className="mt-6 cursor-not-allowed rounded-xl bg-slate-300 px-4 py-2 font-semibold text-white"
+              onClick={() => navigate("/workout-plans/new")}
+              className="mt-6 rounded-xl bg-emerald-700 px-4 py-2 font-semibold text-white transition hover:bg-emerald-800"
             >
-              Create plan — coming next
+              Create plan
             </button>
           </article>
 
