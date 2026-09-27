@@ -1,8 +1,11 @@
-export * as exerciseService from './Repository';
+export * as exerciseService from "./Repository";
 
 export type {
   Exercise,
+  ExerciseCategory,
+  ExerciseDetails,
+  ExerciseDifficulty,
   ExerciseFilters,
   ExerciseListResponse,
   ExerciseResponse,
-} from './Types';
+} from "./Types";
