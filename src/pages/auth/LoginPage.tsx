@@ -1,5 +1,6 @@
-import { useState, type FormEvent } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useState, type FormEvent, useEffect } from "react";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import AuthLayout from "../../components/AuthLayout";
 import { useAuthContext } from "../../contexts";
@@ -13,6 +14,16 @@ function LoginPage() {
   const { login } = useAuthContext();
   const navigate = useNavigate();
   const location = useLocation();
+
+  const [searchParams, ] = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get("verified")) {
+      toast.success("email verified")
+    }
+  }, [])
+
+
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

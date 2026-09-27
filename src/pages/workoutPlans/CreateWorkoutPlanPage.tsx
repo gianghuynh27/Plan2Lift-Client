@@ -138,7 +138,6 @@ function CreateWorkoutPlanPage() {
                     selectedExerciseId,
 
                   targetSets,
-
                   targetReps,
                 },
               ],
