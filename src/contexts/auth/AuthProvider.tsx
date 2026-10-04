@@ -16,7 +16,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
   const [initialToken] = useState(() =>
     sessionStorage.getItem(SESSION_STORAGE.ACCESS_TOKEN_KEY),
   );
-
+  
   const [accessToken, setAccessToken] = useState<string | null>(initialToken);
 
   const [user, setUser] = useState<currentUser | null>(null);
