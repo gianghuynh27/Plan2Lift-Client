@@ -2,6 +2,7 @@ export type PlannedExerciseInput = {
   exerciseId: string;
   targetSets: number;
   targetReps: number;
+  targetWeight?: number;
 };
 
 export type WorkoutDayInput = {
@@ -30,6 +31,7 @@ export type PlannedExercise<
   exerciseId: TExercise;
   targetSets: number;
   targetReps: number;
+  targetWeight?: number;
 };
 
 export type WorkoutDay<

@@ -20,17 +20,11 @@ export const registerUser = async (
 // : Promise<
 //   Responses["getCurrentUser"] | null
 // >
-export const getCurrentUser = async () => {
-  try {
-    const response = await baseApi.get("/v1/users/me");
-    if (response.status !== 200) {
-      throw new Error(response.statusText);
-    }
-    return response.data.data as Responses["getCurrentUser"];
-  } catch (error) {
-    console.error("Error fetching current user:", error);
-    return null;
-  }
+export const getCurrentUser = async (): Promise<
+  Responses["getCurrentUser"]
+> => {
+  const response = await baseApi.get("/v1/users/me");
+  return response.data.data as Responses["getCurrentUser"];
 };
 
 export const loginUser = async (

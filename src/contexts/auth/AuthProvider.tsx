@@ -4,6 +4,12 @@ import { authService } from "../../services/auth";
 import AuthContext from "./AuthContext";
 
 import { SESSION_STORAGE } from "../../constants";
+import {
+  getAccessToken,
+  refreshAccessToken,
+  removeAccessToken,
+  storeAccessToken,
+} from "../../services/Api";
 import { usePersistLogin } from "../../hooks";
 import type { Responses } from "../../services/auth/Types";
 
@@ -16,37 +22,48 @@ export default function AuthProvider({ children }: AuthProviderProps) {
   const [initialToken] = useState(() =>
     sessionStorage.getItem(SESSION_STORAGE.ACCESS_TOKEN_KEY),
   );
-  
+
   const [accessToken, setAccessToken] = useState<string | null>(initialToken);
 
   const [user, setUser] = useState<currentUser | null>(null);
 
-  const [isInitializing, setIsInitializing] = useState(Boolean(initialToken));
+  /*
+   * Always initialize.
+   *
+   * A new tab may not have an access token, but
+   * it may still have a valid refresh-token cookie.
+   */
+  const [isInitializing, setIsInitializing] = useState(true);
 
   usePersistLogin(
     initialToken,
-    authService.getCurrentUser as (token: string) => Promise<currentUser>,
+    refreshAccessToken,
+    authService.getCurrentUser,
     setUser,
     setAccessToken,
     setIsInitializing,
   );
 
-  async function establishSession(token: string) {
-    sessionStorage.setItem(SESSION_STORAGE.ACCESS_TOKEN_KEY, token);
-
+  async function establishSession(token: string): Promise<void> {
+    storeAccessToken(token);
     setAccessToken(token);
-    // await sessionStorage.setItem(SESSION_STORAGE.ACCESS_TOKEN_KEY, token);
-    const response = await authService.getCurrentUser();
 
-    if (!response) {
-      sessionStorage.removeItem(SESSION_STORAGE.ACCESS_TOKEN_KEY);
+    try {
+      const currentUser = await authService.getCurrentUser();
+
+      const latestAccessToken = getAccessToken();
+
+      setAccessToken(latestAccessToken ?? token);
+
+      setUser(currentUser);
+    } catch (error) {
+      removeAccessToken();
 
       setAccessToken(null);
+      setUser(null);
 
-      throw new Error("Unable to load your account after signing in.");
+      throw error;
     }
-
-    setUser(response as currentUser);
   }
 
   async function login(email: string, password: string) {
